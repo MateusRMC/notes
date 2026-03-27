@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [books, setBooks] = useState([]);
   const [newBook, setNewBook] = useState("");
+  const [sendingBook, setSendingBook] = useState(false);
 
   async function getBooks() {
     const req = await fetch("/api/books/");
@@ -16,6 +17,7 @@ export default function Home() {
 
   async function postBooks(e) {
     e.preventDefault();
+    setSendingBook(true);
 
     const req = await fetch("/api/books/", {
       method: "POST",
@@ -27,6 +29,7 @@ export default function Home() {
 
     setNewBook("");
     getBooks();
+    setSendingBook(false);
   }
 
   useEffect(() => {
@@ -34,11 +37,10 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="main">
-      <h1>Notes for life.</h1>
+    <>
       <div className="showBooks">
         {books.map((book) => (
-          <Link key={book.id} href={`/book?id=${book.id}`}>
+          <Link key={book.id} href={`/?book_id=${book.id}`}>
             <p>{book.title}</p>
           </Link>
         ))}
@@ -52,9 +54,13 @@ export default function Home() {
             onChange={(e) => setNewBook(e.target.value)}
             value={newBook}
           />
-          <input type="submit" value="Create new book" />
+          {sendingBook ? (
+            <p>Creating book...</p>
+          ) : (
+            <input type="submit" value="Create new book" />
+          )}
         </form>
       </div>
-    </div>
+    </>
   );
 }
