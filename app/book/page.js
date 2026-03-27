@@ -12,9 +12,11 @@ export default function Book() {
     const req = await fetch("/api/pages");
     const res = await req.json();
 
-    const findPages = res.filter((p) => p.book_id === bookID);
+    const filteredPages = res.filter((p) => p.book_id === bookID);
 
-    setPages(findPages);
+    console.log(filteredPages);
+
+    setPages(filteredPages);
   }
 
   useEffect(() => {
