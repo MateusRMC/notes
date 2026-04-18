@@ -7,6 +7,7 @@ export default function Home() {
   const [books, setBooks] = useState([]);
   const [newBook, setNewBook] = useState("");
   const [sendingBook, setSendingBook] = useState(false);
+  const [bookID, setBookID] = useState("");
 
   async function getBooks() {
     const req = await fetch("/api/books/");
@@ -38,28 +39,17 @@ export default function Home() {
 
   return (
     <>
-      <div className="showBooks">
+      <div className="booksList">
+        <button className="addBookButton">Add book</button>
         {books.map((book) => (
-          <Link key={book.id} href={`/?book_id=${book.id}`}>
-            <p>{book.title}</p>
-          </Link>
+          <p key={book.id} onClick={() => setBookID(book.id)}>
+            {book.title}
+          </p>
         ))}
       </div>
-      <div className="newBook">
-        <form onSubmit={postBooks}>
-          <input
-            type="text"
-            name="title"
-            placeholder="Book title"
-            onChange={(e) => setNewBook(e.target.value)}
-            value={newBook}
-          />
-          {sendingBook ? (
-            <p>Creating book...</p>
-          ) : (
-            <input type="submit" value="Create new book" />
-          )}
-        </form>
+      <div className="showArea">
+        <h1 className="header">Notes for Life</h1>
+        {bookID}
       </div>
     </>
   );
