@@ -4,8 +4,9 @@
 }
 
 body {
-  background-color: beige;
-  color: black;
+  background-color: rgb(234, 219, 202);
+  color: #202020;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .main {
@@ -16,34 +17,50 @@ body {
   flex: 1;
 }
 
-.booksList {
+.sideBar {
   min-height: 0;
   flex: 2;
   display: flex;
   flex-direction: column;
 }
 
-.booksList p {
-  background-color: transparent;
+.notesList {
+  margin: 20px;
+}
+
+.noteCard {
+  background: none;
+  font-size: 18px;
+  width: 100%;
   border: none;
+  border-radius: 3px;
   text-align: left;
   text-transform: capitalize;
   padding: 5px 10px;
+
   cursor: pointer;
 }
 
-.booksList p:hover {
+.noteCard:hover {
   background-color: #505050;
   color: whitesmoke;
 }
 
-.addBookButton {
-  padding: 10px;
-  margin: 10px;
-  background-color: #505050;
-  border-radius: 3px;
+.addNoteButton {
+  padding: 20px;
+
+  background-color: #202020;
   color: whitesmoke;
   width: 100%;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.addNoteButton:hover {
+  background-color: #606060;
+  color: white;
 }
 
 .showArea {
@@ -51,9 +68,50 @@ body {
   flex: 8;
   display: flex;
   flex-direction: column;
-  padding: 40px;
+  padding: 20px;
 }
 
 .showArea h1 {
   text-align: center;
+}
+
+.formNote {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 1000px;
+  margin: auto;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.newTitle {
+  height: 30px;
+  margin: 10px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 16px;
+  background-color: white;
+}
+
+.newContent {
+  min-height: 200px;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+
+.formSubmit {
+  background-color: #202020;
+  color: whitesmoke;
+  padding: 20px 40px;
+  border: none;
+  border-radius: 8px;
+  margin: 10px;
 }

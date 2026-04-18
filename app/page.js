@@ -1,55 +1,105 @@
 "use client";
 
+import { makeErroringSearchParamsForUseCache } from "next/dist/server/request/search-params";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Home() {
-  const [books, setBooks] = useState([]);
-  const [newBook, setNewBook] = useState("");
-  const [sendingBook, setSendingBook] = useState(false);
-  const [bookID, setBookID] = useState("");
+  const [notes, setNotes] = useState([]);
+  const [newNoteTitle, setNewNoteTitle] = useState("");
+  const [newNoteContent, setNewNoteContent] = useState("");
+  const [sendingNote, setSendingNote] = useState(false);
+  const [selectedNote, setSelectedNote] = useState(0);
+  const [notesList, setNotesList] = useState(true);
 
-  async function getBooks() {
-    const req = await fetch("/api/books/");
+  async function getNotes() {
+    const req = await fetch("/api/notes/");
     const res = await req.json();
 
-    setBooks(res);
+    setNotes(res);
   }
 
-  async function postBooks(e) {
+  async function postNote(e) {
     e.preventDefault();
-    setSendingBook(true);
+    setSendingNote(true);
 
-    const req = await fetch("/api/books/", {
+    const req = await fetch("/api/notes/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title: newBook }),
+      body: JSON.stringify({ title: newNoteTitle, content: newNoteContent }),
     });
 
-    setNewBook("");
-    getBooks();
-    setSendingBook(false);
+    setNewNote("");
+    setSendingNote(false);
   }
 
   useEffect(() => {
-    getBooks();
+    getNotes();
   }, []);
 
   return (
     <>
-      <div className="booksList">
-        <button className="addBookButton">Add book</button>
-        {books.map((book) => (
-          <p key={book.id} onClick={() => setBookID(book.id)}>
-            {book.title}
+      <div className="sideBar">
+        <button className="addNoteButton" onClick={() => setSelectedNote(0)}>
+          Add note
+        </button>
+        <div className="notesList">
+          <p
+            onClick={() => (notesList ? setNotesList(false) : setNotesList(true))}
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              cursor: "pointer",
+            }}
+          >
+            <small>Your notes ({notes.length})</small>
+            {notesList ? (
+              <img src="arrowUp.svg" style={{ cursor: "pointer" }} />
+            ) : (
+              <img src="arrowDown.svg" style={{ cursor: "pointer" }} />
+            )}
           </p>
-        ))}
+          {notes.map((note) => (
+            <button
+              style={{ display: notesList ? "" : "none" }}
+              className="noteCard"
+              key={note.id}
+              onClick={() => setSelectedNote(notes.find((n) => n.id === note.id))}
+            >
+              {note.title}
+            </button>
+          ))}
+        </div>
       </div>
       <div className="showArea">
-        <h1 className="header">Notes for Life</h1>
-        {bookID}
+        {selectedNote ? (
+          <div className="displayNote">
+            <h1>{selectedNote.title}</h1>
+            <p>{selectedNote.content}</p>
+          </div>
+        ) : (
+          <form className="formNote" onSubmit={postNote}>
+            <h3>Write your new note</h3>
+            <input
+              className="newTitle"
+              type="text"
+              placeholder="Note title"
+              onChange={(e) => setNewNoteTitle(e.target.value)}
+              value={newNoteTitle}
+            />
+            <textarea
+              className="newContent"
+              onChange={(e) => setNewNoteContent(e.target.value)}
+              value={newNoteContent}
+              placeholder="Note content"
+            />
+            <input className="formSubmit" type="submit" value="Save note" />
+          </form>
+        )}
       </div>
     </>
   );
