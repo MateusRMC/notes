@@ -1,8 +1,8 @@
 "use client";
 
-import { makeErroringSearchParamsForUseCache } from "next/dist/server/request/search-params";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
 
 export default function Home() {
   const [notes, setNotes] = useState([]);
@@ -31,8 +31,10 @@ export default function Home() {
       body: JSON.stringify({ title: newNoteTitle, content: newNoteContent }),
     });
 
-    setNewNote("");
+    setNewNoteTitle("");
+    setNewNoteContent("");
     setSendingNote(false);
+    getNotes();
   }
 
   useEffect(() => {
@@ -79,7 +81,7 @@ export default function Home() {
         {selectedNote ? (
           <div className="displayNote">
             <h1>{selectedNote.title}</h1>
-            <p>{selectedNote.content}</p>
+            <Markdown>{selectedNote.content}</Markdown>
           </div>
         ) : (
           <form className="formNote" onSubmit={postNote}>
@@ -97,7 +99,12 @@ export default function Home() {
               value={newNoteContent}
               placeholder="Note content"
             />
-            <input className="formSubmit" type="submit" value="Save note" />
+            <input
+              className="formSubmit"
+              type="submit"
+              value={sendingNote ? "Sending..." : "Send note"}
+              disabled={sendingNote && true}
+            />
           </form>
         )}
       </div>
