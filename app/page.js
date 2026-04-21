@@ -92,12 +92,14 @@ export default function Home() {
               placeholder="Note title"
               onChange={(e) => setNewNoteTitle(e.target.value)}
               value={newNoteTitle}
+              required
             />
             <textarea
               className="newContent"
               onChange={(e) => setNewNoteContent(e.target.value)}
               value={newNoteContent}
               placeholder="Note content"
+              required
             />
             <input
               className="formSubmit"
