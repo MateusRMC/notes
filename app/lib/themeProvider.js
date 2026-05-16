@@ -6,7 +6,7 @@ const ThemeContext = createContext(null);
 
 const THEME_COLORS = {
   light: "#ffffff",
-  dark: "#111111",
+  dark: "#000000",
 };
 
 function setBrowserThemeColor(theme) {
