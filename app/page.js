@@ -11,6 +11,7 @@ export default function Home() {
   const [sendingNote, setSendingNote] = useState(false);
   const [selectedNote, setSelectedNote] = useState(0);
   const [notesList, setNotesList] = useState(true);
+  const [sideBarToggle, setSidebarToggle] = useState(true);
 
   async function getNotes() {
     const req = await fetch("/api/notes/");
@@ -43,9 +44,20 @@ export default function Home() {
 
   return (
     <>
-      <div className="sideBar">
+      <div className="sideBar" style={{ display: sideBarToggle ? "flex" : "none" }}>
+        <div className="header-sideBar">
+          <h1>Notes App</h1>
+          {sideBarToggle && (
+            <img
+              style={{ width: "30px", height: "30px" }}
+              src="/sidebar-close.png"
+              onClick={() => setSidebarToggle(false)}
+            />
+          )}
+        </div>
+
         <button className="addNoteButton" onClick={() => setSelectedNote(0)}>
-          Add note
+          Create new note
         </button>
         <div className="notesList">
           <p
@@ -78,6 +90,15 @@ export default function Home() {
         </div>
       </div>
       <div className="showArea">
+        {sideBarToggle ? (
+          ""
+        ) : (
+          <img
+            src="/sidebar-open.png"
+            style={{ width: "30px", cursor: "pointer" }}
+            onClick={() => setSidebarToggle(true)}
+          />
+        )}
         {selectedNote ? (
           <div className="displayNote">
             <h1>{selectedNote.title}</h1>
