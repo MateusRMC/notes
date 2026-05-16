@@ -46,7 +46,7 @@ export default function Home() {
     <>
       <div className="sideBar" style={{ display: sideBarToggle ? "flex" : "none" }}>
         <div className="header-sideBar">
-          <img className="app-logo" src="simplenotes-logo.jpg" />
+          <img className="app-logo" src="simplenotes.jpg" />
 
           {sideBarToggle && (
             <img
