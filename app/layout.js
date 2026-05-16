@@ -1,8 +1,22 @@
 import "./styles.scss";
 
 export const metadata = {
-  title: "Welcome to notes",
-  description: "Made by Mat in his lab",
+  title: "Simple Notes - Write and nothing more.",
+  description: "Write and nothing more.",
+  applicationName: "Simple Notes",
+  icons: {
+    icon: "/icons/favicon-196.png",
+    apple: "/icons/apple-icon-180.png",
+  },
+  appleWebApp: {
+    capable: true,
+    title: "Simple Notes",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport = {
+  themeColor: "#fff",
 };
 
 export default function RootLayout({ children }) {

@@ -46,16 +46,15 @@ export default function Home() {
     <>
       <div className="sideBar" style={{ display: sideBarToggle ? "flex" : "none" }}>
         <div className="header-sideBar">
-          <h1>Notes App</h1>
+          <h1>Simple Notes</h1>
           {sideBarToggle && (
             <img
-              style={{ width: "30px", height: "30px" }}
+              style={{ width: "30px", height: "30px", cursor: "pointer" }}
               src="/sidebar-close.png"
               onClick={() => setSidebarToggle(false)}
             />
           )}
         </div>
-
         <button className="addNoteButton" onClick={() => setSelectedNote(0)}>
           Create new note
         </button>
@@ -89,47 +88,59 @@ export default function Home() {
           ))}
         </div>
       </div>
-      <div className="showArea">
-        {sideBarToggle ? (
-          ""
-        ) : (
-          <img
-            src="/sidebar-open.png"
-            style={{ width: "30px", cursor: "pointer" }}
-            onClick={() => setSidebarToggle(true)}
-          />
-        )}
-        {selectedNote ? (
-          <div className="displayNote">
-            <h1>{selectedNote.title}</h1>
-            <Markdown>{selectedNote.content}</Markdown>
-          </div>
-        ) : (
-          <form className="formNote" onSubmit={postNote}>
-            <h3>Write your new note</h3>
-            <input
-              className="newTitle"
-              type="text"
-              placeholder="Note title"
-              onChange={(e) => setNewNoteTitle(e.target.value)}
-              value={newNoteTitle}
-              required
+      <div className="mainArea">
+        <div
+          className="topBar"
+          style={{ justifyContent: sideBarToggle ? "flex-end" : "space-between" }}
+        >
+          {sideBarToggle ? (
+            ""
+          ) : (
+            <img
+              src="/sidebar-open.png"
+              style={{
+                width: "30px",
+                height: "30px",
+                cursor: "pointer",
+                backgroundColor: "$main",
+              }}
+              onClick={() => setSidebarToggle(true)}
             />
-            <textarea
-              className="newContent"
-              onChange={(e) => setNewNoteContent(e.target.value)}
-              value={newNoteContent}
-              placeholder="Note content"
-              required
-            />
-            <input
-              className="formSubmit"
-              type="submit"
-              value={sendingNote ? "Sending..." : "Send note"}
-              disabled={sendingNote && true}
-            />
-          </form>
-        )}
+          )}
+          <button>DarkMode (alpha)</button>
+        </div>
+        <div className="showArea">
+          {selectedNote ? (
+            <div className="displayNote">
+              <h1>{selectedNote.title}</h1>
+              <Markdown>{selectedNote.content}</Markdown>
+            </div>
+          ) : (
+            <form className="formNote" onSubmit={postNote}>
+              <input
+                className="newTitle"
+                type="text"
+                placeholder="What's your note's title?"
+                onChange={(e) => setNewNoteTitle(e.target.value)}
+                value={newNoteTitle}
+                required
+              />
+              <textarea
+                className="newContent"
+                onChange={(e) => setNewNoteContent(e.target.value)}
+                value={newNoteContent}
+                placeholder="What's on your mind?"
+                required
+              />
+              <input
+                className="formSubmit"
+                type="submit"
+                value={sendingNote ? "Sending..." : "Send note"}
+                disabled={sendingNote && true}
+              />
+            </form>
+          )}
+        </div>
       </div>
     </>
   );

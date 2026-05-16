@@ -4,7 +4,7 @@
 }
 
 body {
-  background-color: whitesmoke;
+  background-color: white;
   color: #202020;
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -21,6 +21,7 @@ body {
 .sideBar {
   min-height: 0;
   flex: 2;
+  max-width: 400px;
   overflow-y: scroll;
   scrollbar-width: none;
   display: flex;
@@ -78,15 +79,27 @@ body {
   color: whitesmoke;
 }
 
-.showArea {
-  min-height: 0;
-  height: 100dvh;
-  overflow-y: scroll;
-  scrollbar-width: none;
-  flex: 8;
+.mainArea {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  flex: 8;
   padding: 30px;
+}
+
+.topBar {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  /*justify-content é feito via JS na página*/
+}
+
+.showArea {
+  overflow-y: scroll;
+  scrollbar-width: none;
+  display: flex;
+  flex-direction: column;
 }
 
 .showArea h1 {
@@ -94,7 +107,7 @@ body {
 }
 
 .displayNote {
-  width: 100%;
+  width: 90%;
   max-width: 1000px;
   margin: 0px auto;
   padding-bottom: 200px;
@@ -106,7 +119,7 @@ body {
 }
 
 .displayNote p {
-  width: 80%;
+  width: 100%;
   line-height: 1.5;
   margin: 30px auto;
   text-align: justify;
@@ -120,16 +133,17 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  margin: 0 auto;
   width: 100%;
   max-width: 1000px;
-  margin: auto;
-  text-align: center;
+  height: 100dvh;
   border-radius: 10px;
 }
 
 .newTitle {
-  height: 30px;
-  margin: 10px;
+  height: 50px;
+  text-align: center;
+  margin: 4px 0px;
   outline: none;
   border: none;
   border-radius: 5px;
@@ -139,13 +153,14 @@ body {
 }
 
 .newContent {
-  min-height: 200px;
-  margin: 10px;
-  padding: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 4px 0px;
+  padding: 20px;
   border-radius: 5px;
   border: none;
   outline: none;
   font-size: 16px;
+  flex: 1;
 }
 
 .formSubmit {

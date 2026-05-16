@@ -6,7 +6,7 @@ export async function GET() {
     .schema("notes")
     .from("notes")
     .select("*")
-    .order("created_at", { ascending: true });
+    .order("created_at", { ascending: false });
 
   if (error) {
     return NextResponse.json({ error: error.message });
