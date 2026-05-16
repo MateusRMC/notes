@@ -1,4 +1,5 @@
 import "./styles.scss";
+import { ThemeProvider } from "./lib/themeProvider";
 
 export const metadata = {
   title: "Simple Notes - Write and nothing more.",
@@ -16,14 +17,16 @@ export const metadata = {
 };
 
 export const viewport = {
-  themeColor: "#fff",
+  themeColor: "#ffffff",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <div className="main">{children}</div>
+        <ThemeProvider>
+          <div className="main">{children}</div>
+        </ThemeProvider>
       </body>
     </html>
   );

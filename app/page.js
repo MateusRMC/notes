@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
+import { ThemeToggle } from "./lib/themeToggle";
 
 export default function Home() {
   const [notes, setNotes] = useState([]);
@@ -24,7 +24,7 @@ export default function Home() {
     e.preventDefault();
     setSendingNote(true);
 
-    const req = await fetch("/api/notes/", {
+    await fetch("/api/notes/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -46,21 +46,25 @@ export default function Home() {
     <>
       <div className="sideBar" style={{ display: sideBarToggle ? "flex" : "none" }}>
         <div className="header-sideBar">
-          <h1>Simple Notes</h1>
+          <img className="app-logo" src="simplenotes-logo.jpg" />
+
           {sideBarToggle && (
             <img
-              style={{ width: "30px", height: "30px", cursor: "pointer" }}
+              className="sidebarIcon"
               src="/sidebar-close.png"
+              alt="Close sidebar"
               onClick={() => setSidebarToggle(false)}
             />
           )}
         </div>
+
         <button className="addNoteButton" onClick={() => setSelectedNote(0)}>
           Create new note
         </button>
+
         <div className="notesList">
           <p
-            onClick={() => (notesList ? setNotesList(false) : setNotesList(true))}
+            onClick={() => setNotesList(!notesList)}
             style={{
               display: "flex",
               flexDirection: "row",
@@ -70,12 +74,14 @@ export default function Home() {
             }}
           >
             <small>Your notes ({notes.length})</small>
+
             {notesList ? (
-              <img src="arrowUp.svg" style={{ cursor: "pointer" }} />
+              <img className="arrowIcon" src="/arrowUp.svg" alt="Collapse notes list" />
             ) : (
-              <img src="arrowDown.svg" style={{ cursor: "pointer" }} />
+              <img className="arrowIcon" src="/arrowDown.svg" alt="Expand notes list" />
             )}
           </p>
+
           {notes.map((note) => (
             <button
               style={{ display: notesList ? "" : "none" }}
@@ -88,6 +94,7 @@ export default function Home() {
           ))}
         </div>
       </div>
+
       <div className="mainArea">
         <div
           className="topBar"
@@ -97,18 +104,16 @@ export default function Home() {
             ""
           ) : (
             <img
+              className="sidebarIcon"
               src="/sidebar-open.png"
-              style={{
-                width: "30px",
-                height: "30px",
-                cursor: "pointer",
-                backgroundColor: "$main",
-              }}
+              alt="Open sidebar"
               onClick={() => setSidebarToggle(true)}
             />
           )}
-          <button>DarkMode (alpha)</button>
+
+          <ThemeToggle />
         </div>
+
         <div className="showArea">
           {selectedNote ? (
             <div className="displayNote">
@@ -125,6 +130,7 @@ export default function Home() {
                 value={newNoteTitle}
                 required
               />
+
               <textarea
                 className="newContent"
                 onChange={(e) => setNewNoteContent(e.target.value)}
@@ -132,11 +138,12 @@ export default function Home() {
                 placeholder="What's on your mind?"
                 required
               />
+
               <input
                 className="formSubmit"
                 type="submit"
-                value={sendingNote ? "Sending..." : "Send note"}
-                disabled={sendingNote && true}
+                value={sendingNote ? "Publishing..." : "Save note"}
+                disabled={sendingNote}
               />
             </form>
           )}

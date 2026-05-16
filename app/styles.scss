@@ -1,12 +1,47 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #202020;
+  --muted: #f5f5f5;
+  --muted-foreground: #606060;
+  --card: #ffffff;
+  --border: #e5e5e5;
+  --primary: #202020;
+  --primary-hover: #606060;
+  --primary-foreground: whitesmoke;
+  --input: #ffffff;
+  --icon-filter: none;
+}
+
+html[data-theme="dark"] {
+  --background: #111111;
+  --foreground: #f5f5f5;
+  --muted: #1c1c1c;
+  --muted-foreground: #b5b5b5;
+  --card: #181818;
+  --border: #303030;
+  --primary: #f5f5f5;
+  --primary-hover: #d4d4d4;
+  --primary-foreground: #111111;
+  --input: #1c1c1c;
+  --icon-filter: invert(1);
 }
 
 body {
-  background-color: white;
-  color: #202020;
+  background-color: var(--background);
+  color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
 }
 
 .main {
@@ -16,6 +51,8 @@ body {
   width: 100dvw;
   overflow: hidden;
   flex: 1;
+  background-color: var(--background);
+  color: var(--foreground);
 }
 
 .sideBar {
@@ -27,6 +64,8 @@ body {
   display: flex;
   flex-direction: column;
   transition: 0.2s;
+  background-color: var(--background);
+  border-right: 1px solid var(--border);
 }
 
 .header-sideBar {
@@ -37,21 +76,38 @@ body {
   align-items: center;
 }
 
+.app-logo {
+  width: 200px;
+  filter: var(--icon-filter);
+}
+
+.sidebarIcon {
+  width: 30px;
+  height: 30px;
+
+  cursor: pointer;
+  filter: var(--icon-filter);
+}
+
+.arrowIcon {
+  cursor: pointer;
+  filter: var(--icon-filter);
+}
+
 .addNoteButton {
   padding: 20px;
-  background-color: #202020;
-  color: whitesmoke;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
   width: 90%;
   margin: 20px auto;
   border-radius: 5px;
   border: none;
   cursor: pointer;
-  transition: 1s;
+  transition: 0.2s;
 }
 
 .addNoteButton:hover {
-  background-color: #606060;
-  color: white;
+  background-color: var(--primary-hover);
 }
 
 .notesList {
@@ -60,23 +116,23 @@ body {
 
 .noteCard {
   background: none;
+  color: var(--foreground);
   width: 100%;
   border: none;
   border-radius: 3px;
   text-align: left;
   padding: 5px 10px;
   margin: 5px 0px;
-
   cursor: pointer;
 }
 
-.notecard::first-letter {
+.noteCard::first-letter {
   text-transform: uppercase;
 }
 
 .noteCard:hover {
-  background-color: #505050;
-  color: whitesmoke;
+  background-color: var(--muted);
+  color: var(--foreground);
 }
 
 .mainArea {
@@ -86,13 +142,28 @@ body {
   overflow: hidden;
   flex: 8;
   padding: 30px;
+  background-color: var(--background);
 }
 
 .topBar {
   width: 100%;
   display: flex;
   flex-direction: row;
-  /*justify-content é feito via JS na página*/
+  align-items: center;
+}
+
+.themeToggle {
+  background-color: var(--muted);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.themeToggle:hover {
+  background-color: var(--border);
 }
 
 .showArea {
@@ -149,7 +220,12 @@ body {
   border-radius: 5px;
   padding: 10px;
   font-size: 16px;
-  background-color: white;
+  background-color: var(--input);
+  color: var(--foreground);
+}
+
+.newTitle::placeholder {
+  color: var(--muted-foreground);
 }
 
 .newContent {
@@ -161,14 +237,25 @@ body {
   outline: none;
   font-size: 16px;
   flex: 1;
+  background-color: var(--input);
+  color: var(--foreground);
+}
+
+.newContent::placeholder {
+  color: var(--muted-foreground);
 }
 
 .formSubmit {
-  background-color: #202020;
-  color: whitesmoke;
+  background-color: var(--primary);
+  color: var(--primary-foreground);
   padding: 20px 40px;
   border: none;
   border-radius: 8px;
   margin: 10px;
   cursor: pointer;
+}
+
+.formSubmit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
