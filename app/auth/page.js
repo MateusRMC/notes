@@ -36,7 +36,7 @@ export default function Home() {
       console.log("Conta criada. Confirme seu e-mail.");
     } else {
       console.log("Conta criada e usuário logado.");
-      window.location.href = "/protect";
+      window.location.href = "/notes";
     }
   }
 
@@ -62,7 +62,7 @@ export default function Home() {
     }
 
     console.log("Login:", json);
-    window.location.href = "/protect";
+    window.location.href = "/notes";
   }
 
   return (

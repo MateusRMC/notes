@@ -11,7 +11,7 @@ export default async function NotesPage() {
   } = await supabase.auth.getUser();
 
   if (error || !user) {
-    redirect("/login");
+    redirect("/auth");
   }
 
   return <NotesPageClient />;
