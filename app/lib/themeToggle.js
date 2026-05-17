@@ -10,8 +10,10 @@ export function ThemeToggle() {
   }
 
   return (
-    <button className="themeToggle" type="button" onClick={toggleTheme}>
-      {theme === "dark" ? "Light mode" : "Dark mode"}
-    </button>
+    <img
+      src={theme === "dark" ? "/lightmode.png" : "darkmode.png"}
+      className="themeToggle"
+      onClick={toggleTheme}
+    />
   );
 }

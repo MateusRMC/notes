@@ -26,7 +26,7 @@ html[data-theme="dark"] {
   --card: #181818;
   --border: #303030;
   --primary: #f5f5f5;
-  --primary-hover: #d4d4d4;
+  --primary-hover: #d5d5d5;
   --primary-foreground: #111111;
   --input: #000000;
   --icon-filter: invert(1);
@@ -42,6 +42,7 @@ button,
 input,
 textarea {
   font: inherit;
+  resize: none;
 }
 
 .main {
@@ -59,6 +60,7 @@ textarea {
   min-height: 0;
   flex: 2;
   max-width: 400px;
+  min-width: 300px;
   overflow-y: scroll;
   scrollbar-width: none;
   display: flex;
@@ -84,7 +86,6 @@ textarea {
 .sidebarIcon {
   width: 30px;
   height: 30px;
-
   cursor: pointer;
   filter: var(--icon-filter);
 }
@@ -153,17 +154,9 @@ textarea {
 }
 
 .themeToggle {
-  background-color: var(--muted);
-  color: var(--foreground);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: 10px 14px;
+  padding: 10px;
   cursor: pointer;
   transition: 0.2s;
-}
-
-.themeToggle:hover {
-  background-color: var(--border);
 }
 
 .showArea {
@@ -247,16 +240,44 @@ textarea {
 }
 
 .formSubmit {
-  background-color: var(--primary);
-  color: var(--primary-foreground);
-  padding: 20px 40px;
-  border: none;
-  border-radius: 8px;
-  margin: 10px;
+  background-color: var(--background);
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  width: 60%;
+  padding: 20px 20px;
+  border-radius: 20px;
+  margin: 20px auto;
   cursor: pointer;
+}
+
+.formSubmit:hover {
+  background-color: var(--foreground);
+  color: var(--background);
 }
 
 .formSubmit:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+/*mobile*/
+
+@media screen and (orientation: portrait) {
+  .mainArea {
+    padding: 15px;
+  }
+
+  .topBar .sidebarIcon {
+    width: 26px;
+    height: 24px;
+  }
+
+  .formSubmit {
+    width: 100%;
+  }
+
+  .sideBar {
+    position: absolute;
+    flex: 8;
+  }
 }

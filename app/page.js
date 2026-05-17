@@ -11,7 +11,7 @@ export default function Home() {
   const [sendingNote, setSendingNote] = useState(false);
   const [selectedNote, setSelectedNote] = useState(0);
   const [notesList, setNotesList] = useState(true);
-  const [sideBarToggle, setSidebarToggle] = useState(true);
+  const [sideBarToggle, setSidebarToggle] = useState(false);
 
   async function getNotes() {
     const req = await fetch("/api/notes/");
@@ -142,7 +142,7 @@ export default function Home() {
               <input
                 className="formSubmit"
                 type="submit"
-                value={sendingNote ? "Publishing..." : "Save note"}
+                value={sendingNote ? "Saving note..." : "Save note"}
                 disabled={sendingNote}
               />
             </form>
