@@ -153,6 +153,10 @@ textarea {
   align-items: center;
 }
 
+.topbar-logo {
+  filter: var(--icon-filter);
+}
+
 .themeToggle {
   padding: 10px;
   cursor: pointer;
