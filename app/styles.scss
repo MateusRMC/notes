@@ -172,10 +172,6 @@ textarea {
   height: 100dvh;
 }
 
-.showArea h1 {
-  text-align: center;
-}
-
 .displayNote {
   width: 90%;
   max-width: 1000px;
@@ -183,9 +179,10 @@ textarea {
   padding-bottom: 200px;
 }
 
-.displayNote h1 {
+.displayNote h3 {
   margin: 20px;
   margin-bottom: 50px;
+  text-align: center;
 }
 
 .displayNote p {
@@ -218,7 +215,8 @@ textarea {
   border: none;
   border-radius: 5px;
   padding: 10px;
-  font-size: 16px;
+  font-size: 1.17em;
+  font-weight: bold;
   background-color: var(--input);
   color: var(--foreground);
   box-sizing: border-box;
@@ -226,6 +224,8 @@ textarea {
 
 .newTitle::placeholder {
   color: var(--muted-foreground);
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .newContent {

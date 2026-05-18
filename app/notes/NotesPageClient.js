@@ -146,7 +146,7 @@ export default function NotesPageClient() {
         <div className="showArea">
           {selectedNote ? (
             <div className="displayNote">
-              <h1>{selectedNote.title}</h1>
+              <h3 className="noteTitle">{selectedNote.title}</h3>
               <Markdown>{selectedNote.content}</Markdown>
             </div>
           ) : (
