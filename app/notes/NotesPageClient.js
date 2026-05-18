@@ -51,6 +51,22 @@ export default function NotesPageClient() {
     getNotes();
   }
 
+  async function noteListHandle(note) {
+    setSelectedNote(notes.find((n) => n.id === note.id));
+
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+    isPortrait && setSidebarToggle(false);
+  }
+
+  async function createNewNoteHandle() {
+    setSelectedNote(0);
+
+    const isPortrait = window.matchMedia("(orientation: portrait)").matches;
+
+    isPortrait && setSidebarToggle(false);
+  }
+
   useEffect(() => {
     getNotes();
   }, []);
@@ -71,7 +87,7 @@ export default function NotesPageClient() {
           )}
         </div>
 
-        <button className="addNoteButton" onClick={() => setSelectedNote(0)}>
+        <button className="addNoteButton" onClick={() => createNewNoteHandle()}>
           Create new note
         </button>
 
@@ -100,7 +116,7 @@ export default function NotesPageClient() {
               style={{ display: notesList ? "" : "none" }}
               className="noteCard"
               key={note.id}
-              onClick={() => setSelectedNote(notes.find((n) => n.id === note.id))}
+              onClick={() => noteListHandle(note)}
             >
               {note.title}
             </button>
