@@ -14,5 +14,5 @@ export default async function NotesPage() {
     redirect("/auth");
   }
 
-  return <NotesPageClient />;
+  return <NotesPageClient user={user} />;
 }

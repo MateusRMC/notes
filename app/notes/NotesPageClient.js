@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import { ThemeToggle } from "../lib/themeToggle";
 
-export default function NotesPageClient() {
+export default function NotesPageClient({ user }) {
   const [notes, setNotes] = useState([]);
   const [newNoteTitle, setNewNoteTitle] = useState("");
   const [newNoteContent, setNewNoteContent] = useState("");
@@ -51,6 +51,17 @@ export default function NotesPageClient() {
     getNotes();
   }
 
+  async function logout() {
+    const res = await fetch("/api/auth/logout", {
+      method: "POST",
+    });
+
+    if (!res.ok) {
+      console.error("Erro ao fazer logout");
+      return;
+    }
+  }
+
   async function noteListHandle(note) {
     setSelectedNote(notes.find((n) => n.id === note.id));
 
@@ -88,29 +99,30 @@ export default function NotesPageClient() {
         </div>
 
         <button className="addNoteButton" onClick={() => createNewNoteHandle()}>
-          Create new note
+          Write new note
         </button>
+        <p
+          onClick={() => setNotesList(!notesList)}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            marginLeft: "30px",
+            marginRight: "20px",
+            marginTop: "10px",
+            alignItems: "center",
+            cursor: "pointer",
+          }}
+        >
+          <small>Your notes ({notes.length})</small>
 
+          {notesList ? (
+            <img className="arrowIcon" src="/arrowUp.svg" alt="Collapse notes list" />
+          ) : (
+            <img className="arrowIcon" src="/arrowDown.svg" alt="Expand notes list" />
+          )}
+        </p>
         <div className="notesList">
-          <p
-            onClick={() => setNotesList(!notesList)}
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              cursor: "pointer",
-            }}
-          >
-            <small>Your notes ({notes.length})</small>
-
-            {notesList ? (
-              <img className="arrowIcon" src="/arrowUp.svg" alt="Collapse notes list" />
-            ) : (
-              <img className="arrowIcon" src="/arrowDown.svg" alt="Expand notes list" />
-            )}
-          </p>
-
           {notes.map((note) => (
             <button
               style={{ display: notesList ? "" : "none" }}
@@ -122,6 +134,9 @@ export default function NotesPageClient() {
             </button>
           ))}
         </div>
+        <button className="logout" onClick={logout}>
+          Logout
+        </button>
       </div>
 
       <div className="mainArea">

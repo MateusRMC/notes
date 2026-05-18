@@ -62,6 +62,7 @@ textarea {
   max-width: 400px;
   min-width: 300px;
   overflow-y: scroll;
+  overflow-x: hidden;
   scrollbar-width: none;
   display: flex;
   flex-direction: column;
@@ -105,7 +106,7 @@ textarea {
   color: var(--primary-foreground);
   width: 90%;
   margin: 20px;
-  border-radius: 5px;
+  border-radius: 30px;
   border: none;
   cursor: pointer;
   transition: 0.2s;
@@ -117,6 +118,9 @@ textarea {
 
 .notesList {
   margin: 20px;
+  flex: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
 .noteCard {
@@ -138,6 +142,16 @@ textarea {
 .noteCard:hover {
   background-color: var(--muted);
   color: var(--foreground);
+}
+
+.logout {
+  background-color: darkred;
+  border: none;
+  color: var(--background);
+  margin: 50px auto;
+  padding: 10px;
+  border-radius: 5px;
+  width: 80%;
 }
 
 .mainArea {
@@ -186,11 +200,13 @@ textarea {
 .displayNote h3 {
   margin: 20px;
   margin-bottom: 50px;
+  font-size: 1.3em;
   text-align: center;
 }
 
 .displayNote p {
   width: 100%;
+  font-size: 18px;
   line-height: 1.5;
   margin: 30px auto;
   text-align: justify;
@@ -219,7 +235,7 @@ textarea {
   border: none;
   border-radius: 5px;
   padding: 10px;
-  font-size: 1.17em;
+  font-size: 1.3em;
   font-weight: bold;
   background-color: var(--input);
   color: var(--foreground);
@@ -244,7 +260,7 @@ textarea {
   border-radius: 5px;
   border: none;
   outline: none;
-  font-size: 16px;
+  font-size: 18px;
 
   resize: none;
   overflow-y: auto;
