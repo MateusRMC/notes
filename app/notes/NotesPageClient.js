@@ -79,7 +79,7 @@ export default function NotesPageClient() {
 
           {sideBarToggle && (
             <img
-              className="sidebarIcon"
+              className="sidebarClose"
               src="/sidebar-close.png"
               alt="Close sidebar"
               onClick={() => setSidebarToggle(false)}
@@ -133,7 +133,7 @@ export default function NotesPageClient() {
             ""
           ) : (
             <img
-              className="sidebarIcon"
+              className="sidebarOpen"
               src="/sidebar-open.png"
               alt="Open sidebar"
               onClick={() => setSidebarToggle(true)}
@@ -154,7 +154,7 @@ export default function NotesPageClient() {
               <input
                 className="newTitle"
                 type="text"
-                placeholder="What's your note's title?"
+                placeholder="Untitled"
                 onChange={(e) => setNewNoteTitle(e.target.value)}
                 value={newNoteTitle}
                 required

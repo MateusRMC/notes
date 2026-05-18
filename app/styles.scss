@@ -71,11 +71,14 @@ textarea {
 }
 
 .header-sideBar {
-  padding: 20px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-top: 40px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .app-logo {
@@ -83,7 +86,8 @@ textarea {
   filter: var(--icon-filter);
 }
 
-.sidebarIcon {
+.sidebarOpen,
+.sidebarClose {
   width: 30px;
   height: 30px;
   cursor: pointer;
@@ -100,7 +104,7 @@ textarea {
   background-color: var(--primary);
   color: var(--primary-foreground);
   width: 90%;
-  margin: 20px auto;
+  margin: 20px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
@@ -286,9 +290,12 @@ textarea {
     padding: 15px;
   }
 
-  .topBar .sidebarIcon {
-    width: 26px;
-    height: 24px;
+  .sidebarClose {
+    display: none;
+  }
+
+  .header-sideBar {
+    justify-content: center;
   }
 
   .formSubmit {
