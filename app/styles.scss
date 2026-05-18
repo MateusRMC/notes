@@ -269,14 +269,14 @@ textarea {
 
 .formSubmit {
   flex-shrink: 0;
-  background-color: var(--foreground);
-  color: var(--background);
-  width: 60%;
+  background-color: var(--background);
+  color: #808080;
+  border: 1px solid var(--border);
+  width: 50%;
   padding: 20px 20px;
   border-radius: 20px;
   margin: 30px auto;
   cursor: pointer;
-
   box-sizing: border-box;
 }
 
@@ -308,5 +308,6 @@ textarea {
     position: absolute;
     height: 100dvh;
     width: 100dvw;
+    border: none;
   }
 }
