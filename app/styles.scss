@@ -288,11 +288,6 @@ textarea {
   box-sizing: border-box;
 }
 
-.formSubmit:hover {
-  background-color: var(--foreground);
-  color: var(--background);
-}
-
 .formSubmit:disabled {
   opacity: 0.7;
   cursor: not-allowed;

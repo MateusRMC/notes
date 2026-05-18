@@ -91,7 +91,7 @@ export default function NotesPageClient({ user }) {
           {sideBarToggle && (
             <img
               className="sidebarClose"
-              src="/sidebar-close.png"
+              src="/sidebar-close.svg"
               alt="Close sidebar"
               onClick={() => setSidebarToggle(false)}
             />
@@ -149,7 +149,7 @@ export default function NotesPageClient({ user }) {
           ) : (
             <img
               className="sidebarOpen"
-              src="/sidebar-open.png"
+              src="/sidebar-open.svg"
               alt="Open sidebar"
               onClick={() => setSidebarToggle(true)}
             />
