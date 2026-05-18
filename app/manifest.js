@@ -1,10 +1,8 @@
-// app/manifest.js
-
 export default function manifest() {
   return {
     name: "Simple Notes",
     short_name: "Simple Notes",
-    description: "An app for writing and nothing more",
+    description: "Write and nothing more",
     start_url: "/",
     scope: "/",
     display: "standalone",
