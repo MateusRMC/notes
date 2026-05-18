@@ -123,7 +123,7 @@ export default function NotesPageClient() {
               onClick={() => setSidebarToggle(true)}
             />
           )}
-          <img className="topbar-logo" src="/SN-logo.jpg" width="35" />
+
           <ThemeToggle />
         </div>
 
