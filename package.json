@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "generate:pwa-assets": "pwa-asset-generator public/simplenotes.svg public/splash --splash-only --type png --background '#ffffff' --padding 'calc(50vh - 10%) calc(50vw - 10%)' --xhtml"
+    "generate:pwa-assets": "pwa-asset-generator public/simplenotes.svg public/splash --splash-only --type png --background '#ffffff' --padding 'calc(50vh - 25%) calc(50vw - 25%)' --xhtml"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.3",
