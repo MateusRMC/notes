@@ -1,5 +1,6 @@
 import "./styles.scss";
 import { ThemeProvider } from "./lib/themeProvider";
+import { iosStartupImages } from "./ios-startup-image";
 
 export const metadata = {
   title: "Simple Notes - Write and nothing more.",
@@ -13,6 +14,7 @@ export const metadata = {
     capable: true,
     title: "Simple Notes",
     statusBarStyle: "default",
+    startupImage: iosStartupImages,
   },
 };
 
