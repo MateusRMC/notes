@@ -153,7 +153,7 @@ export default function NotesPageClient({ user }) {
               alt="Open sidebar"
               onClick={() => {
                 setSidebarToggle(true);
-                getNotes;
+                getNotes();
               }}
             />
           )}
