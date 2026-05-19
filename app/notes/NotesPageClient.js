@@ -151,7 +151,10 @@ export default function NotesPageClient({ user }) {
               className="sidebarOpen"
               src="/sidebar-open.svg"
               alt="Open sidebar"
-              onClick={() => setSidebarToggle(true)}
+              onClick={() => {
+                setSidebarToggle(true);
+                getNotes;
+              }}
             />
           )}
 
