@@ -12,6 +12,8 @@ export default function NotesPageClient({ user }) {
   const [newNoteTitle, setNewNoteTitle] = useState(""); //inputs
   const [newNoteContent, setNewNoteContent] = useState(""); //inputs
   const [sendingNote, setSendingNote] = useState(false); //sending handler state
+  const [deletingNote, setDeletingNote] = useState(false); //deleting note handler state
+
   const [selectedNote, setSelectedNote] = useState(null); //selected note object (ID, TITLE AND CONTENT) if "null" -> no note is selected therefore you're creating a new note
   const [editNote, setEditNote] = useState(false); // editing note or note;
   const [notesList, setNotesList] = useState(true); //expand and collapse notesList
@@ -57,6 +59,8 @@ export default function NotesPageClient({ user }) {
   }
 
   async function deleteNote(note) {
+    setDeletingNote(true);
+
     await fetch("/api/notes", {
       method: "DELETE",
       headers: {
@@ -67,6 +71,8 @@ export default function NotesPageClient({ user }) {
       }),
     });
 
+    setOptionsMenu(null);
+    setDeletingNote(false);
     getNotes();
   }
 
@@ -160,7 +166,13 @@ export default function NotesPageClient({ user }) {
         <div className="notesList" onScroll={() => setOptionsMenu(null)}>
           {notes.map((note) => (
             <div className="noteItem" key={note.id}>
-              <button className="noteCard" onClick={() => noteListHandle(note)}>
+              <button
+                className="noteCard"
+                onClick={() => {
+                  noteListHandle(note);
+                  setOptionsMenu(null);
+                }}
+              >
                 {note.title}
               </button>
               <img
@@ -170,8 +182,12 @@ export default function NotesPageClient({ user }) {
               />
               {optionsMenu === note.id && (
                 <div className="noteOptions">
-                  <button className="deleteNote" onClick={() => deleteNote(note)}>
-                    Delete
+                  <button
+                    className="deleteNote"
+                    onClick={() => deleteNote(note)}
+                    disabled={deletingNote ? true : false}
+                  >
+                    {deletingNote ? "Deleting..." : "Delete"}
                   </button>
                 </div>
               )}
