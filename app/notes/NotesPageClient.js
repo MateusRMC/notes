@@ -3,15 +3,19 @@
 import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import { ThemeToggle } from "../lib/themeToggle";
+import { useRouter } from "next/navigation";
 
 export default function NotesPageClient({ user }) {
-  const [notes, setNotes] = useState([]);
-  const [newNoteTitle, setNewNoteTitle] = useState("");
-  const [newNoteContent, setNewNoteContent] = useState("");
-  const [sendingNote, setSendingNote] = useState(false);
-  const [selectedNote, setSelectedNote] = useState(0);
-  const [notesList, setNotesList] = useState(true);
-  const [sideBarToggle, setSidebarToggle] = useState(false);
+  const router = useRouter(); //navigation handler
+
+  const [notes, setNotes] = useState([]); //all notes from the user
+  const [newNoteTitle, setNewNoteTitle] = useState(""); //inputs
+  const [newNoteContent, setNewNoteContent] = useState(""); //inputs
+  const [sendingNote, setSendingNote] = useState(false); //sending handler state
+  const [selectedNote, setSelectedNote] = useState(0); //selected note object (ID, TITLE AND CONTENT) if 0 no note is selected
+  const [notesList, setNotesList] = useState(true); //expand and collapse notesList
+  const [sideBarToggle, setSidebarToggle] = useState(false); //expand and collapse sidebar
+  const [optionsMenu, setOptionsMenu] = useState(null); //toggle note options menu card
 
   async function getNotes() {
     const req = await fetch("/api/notes/");
@@ -60,6 +64,8 @@ export default function NotesPageClient({ user }) {
       console.error("Erro ao fazer logout");
       return;
     }
+
+    router.push("/");
   }
 
   async function noteListHandle(note) {
@@ -124,14 +130,19 @@ export default function NotesPageClient({ user }) {
         </p>
         <div className="notesList">
           {notes.map((note) => (
-            <button
-              style={{ display: notesList ? "" : "none" }}
-              className="noteCard"
-              key={note.id}
-              onClick={() => noteListHandle(note)}
-            >
-              {note.title}
-            </button>
+            <div className="noteItem" key={note.id}>
+              <button className="noteCard" onClick={() => noteListHandle(note)}>
+                {note.title}
+              </button>
+
+              <img
+                src="/options.svg"
+                className="optionsIcon"
+                onClick={() => setOptionsMenu(optionsMenu === note.id ? null : note.id)}
+              />
+
+              {optionsMenu === note.id && <button className="deleteNote">Delete</button>}
+            </div>
           ))}
         </div>
         <button className="logout" onClick={logout}>
@@ -154,6 +165,7 @@ export default function NotesPageClient({ user }) {
               onClick={() => {
                 setSidebarToggle(true);
                 getNotes();
+                setOptionsMenu(null);
               }}
             />
           )}
