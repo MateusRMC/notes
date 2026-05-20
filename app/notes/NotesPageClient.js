@@ -1,14 +1,12 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import Markdown from "react-markdown";
 import { ThemeToggle } from "../lib/themeToggle";
 import { useRouter } from "next/navigation";
 
 export default function NotesPageClient({ user }) {
   const router = useRouter(); //navigation handler
-  const pullStartY = useRef(null); //refresh page refs
-  const pullTriggered = useRef(false); //refresh page refs
 
   const [notes, setNotes] = useState([]); //all notes from the user
   const [newNoteTitle, setNewNoteTitle] = useState(""); //inputs
@@ -21,30 +19,6 @@ export default function NotesPageClient({ user }) {
   const [notesList, setNotesList] = useState(true); //expand and collapse notesList
   const [sideBarToggle, setSidebarToggle] = useState(false); //expand and collapse sidebar
   const [optionsMenu, setOptionsMenu] = useState(null); //toggle note options menu card
-
-  function handlePullStart(e) {
-    if (window.scrollY === 0) {
-      pullStartY.current = e.touches[0].clientY;
-      pullTriggered.current = false;
-    }
-  }
-
-  function handlePullMove(e) {
-    if (pullStartY.current === null || pullTriggered.current) return;
-
-    const currentY = e.touches[0].clientY;
-    const distance = currentY - pullStartY.current;
-
-    if (window.scrollY === 0 && distance > 80) {
-      pullTriggered.current = true;
-      getNotes();
-    }
-  }
-
-  function handlePullEnd() {
-    pullStartY.current = null;
-    pullTriggered.current = false;
-  }
 
   async function getNotes() {
     const req = await fetch("/api/notes/");
@@ -151,13 +125,7 @@ export default function NotesPageClient({ user }) {
 
   return (
     <>
-      <div
-        className="sideBar"
-        style={{ display: sideBarToggle ? "flex" : "none" }}
-        onTouchStart={handlePullStart}
-        onTouchMove={handlePullMove}
-        onTouchEnd={handlePullEnd}
-      >
+      <div className="sideBar" style={{ display: sideBarToggle ? "flex" : "none" }}>
         <div className="header-sideBar">
           <img className="app-logo" src="simplenotes.jpg" />
 
@@ -231,12 +199,7 @@ export default function NotesPageClient({ user }) {
         </button>
       </div>
 
-      <div
-        className="mainArea"
-        onTouchStart={handlePullStart}
-        onTouchMove={handlePullMove}
-        onTouchEnd={handlePullEnd}
-      >
+      <div className="mainArea">
         <div
           className="topBar"
           style={{ justifyContent: sideBarToggle ? "flex-end" : "space-between" }}
