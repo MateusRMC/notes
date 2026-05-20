@@ -12,7 +12,8 @@ export default function NotesPageClient({ user }) {
   const [newNoteTitle, setNewNoteTitle] = useState(""); //inputs
   const [newNoteContent, setNewNoteContent] = useState(""); //inputs
   const [sendingNote, setSendingNote] = useState(false); //sending handler state
-  const [selectedNote, setSelectedNote] = useState(0); //selected note object (ID, TITLE AND CONTENT) if 0 no note is selected
+  const [selectedNote, setSelectedNote] = useState(null); //selected note object (ID, TITLE AND CONTENT) if "null" -> no note is selected therefore you're creating a new note
+  const [editNote, setEditNote] = useState(false); // editing note or note;
   const [notesList, setNotesList] = useState(true); //expand and collapse notesList
   const [sideBarToggle, setSidebarToggle] = useState(false); //expand and collapse sidebar
   const [optionsMenu, setOptionsMenu] = useState(null); //toggle note options menu card
@@ -55,6 +56,34 @@ export default function NotesPageClient({ user }) {
     getNotes();
   }
 
+  async function deleteNote(note) {
+    await fetch("/api/notes", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: note.id,
+      }),
+    });
+
+    getNotes();
+  }
+
+  async function updateNote(note) {
+    await fetch("/api/notes", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: note.id,
+        title: newNoteTitle,
+        content: newNoteContent,
+      }),
+    });
+  }
+
   async function logout() {
     const res = await fetch("/api/auth/logout", {
       method: "POST",
@@ -77,7 +106,7 @@ export default function NotesPageClient({ user }) {
   }
 
   async function createNewNoteHandle() {
-    setSelectedNote(0);
+    setSelectedNote(null);
 
     const isPortrait = window.matchMedia("(orientation: portrait)").matches;
 
@@ -128,20 +157,24 @@ export default function NotesPageClient({ user }) {
             <img className="arrowIcon" src="/arrowDown.svg" alt="Expand notes list" />
           )}
         </p>
-        <div className="notesList">
+        <div className="notesList" onScroll={() => setOptionsMenu(null)}>
           {notes.map((note) => (
             <div className="noteItem" key={note.id}>
               <button className="noteCard" onClick={() => noteListHandle(note)}>
                 {note.title}
               </button>
-
               <img
                 src="/options.svg"
                 className="optionsIcon"
                 onClick={() => setOptionsMenu(optionsMenu === note.id ? null : note.id)}
               />
-
-              {optionsMenu === note.id && <button className="deleteNote">Delete</button>}
+              {optionsMenu === note.id && (
+                <div className="noteOptions">
+                  <button className="deleteNote" onClick={() => deleteNote(note)}>
+                    Delete
+                  </button>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -184,10 +217,9 @@ export default function NotesPageClient({ user }) {
               <input
                 className="newTitle"
                 type="text"
-                placeholder="Untitled"
+                placeholder="Note title (optional)"
                 onChange={(e) => setNewNoteTitle(e.target.value)}
                 value={newNoteTitle}
-                required
               />
 
               <textarea
