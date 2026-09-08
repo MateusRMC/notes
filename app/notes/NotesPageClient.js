@@ -13,7 +13,6 @@ export default function NotesPageClient({ user }) {
   const [newNoteContent, setNewNoteContent] = useState(""); //inputs
   const [sendingNote, setSendingNote] = useState(false); //sending handler state
   const [deletingNote, setDeletingNote] = useState(false); //deleting note handler state
-
   const [selectedNote, setSelectedNote] = useState(null); //selected note object (ID, TITLE AND CONTENT) if "null" -> no note is selected therefore you're creating a new note
   const [editNote, setEditNote] = useState(false); // editing note or note;
   const [notesList, setNotesList] = useState(true); //expand and collapse notesList
@@ -165,7 +164,11 @@ export default function NotesPageClient({ user }) {
         </p>
         <div className="notesList" onScroll={() => setOptionsMenu(null)}>
           {notes.map((note) => (
-            <div className="noteItem" key={note.id}>
+            <div
+              className="noteItem"
+              key={note.id}
+              style={{ display: notesList ? "flex" : "none" }}
+            >
               <button
                 className="noteCard"
                 onClick={() => {
@@ -230,13 +233,14 @@ export default function NotesPageClient({ user }) {
             </div>
           ) : (
             <form className="formNote" onSubmit={postNote}>
-              <input
+              {/*<input
                 className="newTitle"
                 type="text"
                 placeholder="Note title (optional)"
                 onChange={(e) => setNewNoteTitle(e.target.value)}
                 value={newNoteTitle}
               />
+              */}
 
               <textarea
                 className="newContent"
