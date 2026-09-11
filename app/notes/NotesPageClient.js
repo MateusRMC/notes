@@ -7,53 +7,19 @@ import { useRouter } from "next/navigation";
 export default function NotesPageClient({ user }) {
   const router = useRouter();
 
-  // ---------------------------------------------------------------------------
-  // React state: things that affect what the user sees
-  // ---------------------------------------------------------------------------
-
   const [notes, setNotes] = useState([]);
   const [editorContent, setEditorContent] = useState("");
   const [activeNoteKey, setActiveNoteKey] = useState(null);
   const [saveStatus, setSaveStatus] = useState("saved");
-
   const [deletingNote, setDeletingNote] = useState(false);
   const [notesList, setNotesList] = useState(true);
   const [sideBarToggle, setSidebarToggle] = useState(false);
   const [optionsMenu, setOptionsMenu] = useState(null);
 
-  // ---------------------------------------------------------------------------
-  // Refs: internal autosave machinery that should not cause renders
-  // ---------------------------------------------------------------------------
-
   const autosaveTimeoutRef = useRef(null);
-
-  // We keep this ref in sync with activeNoteKey so async saves can safely check
-  // whether they are still saving the note currently visible in the editor.
   const activeNoteKeyRef = useRef(null);
-
-  /*
-    One single Map contains the internal save state of every note.
-
-    noteSessionsRef.current.get(noteKey) => {
-      id,             // database ID; null until the first POST succeeds
-      latestContent,  // newest text currently typed by the user
-      savedContent,   // exact text confirmed as saved by the server
-      savePromise,    // current save operation, or null
-      deleted,        // prevents an in-flight save from resurrecting a deleted note
-    }
-
-    The noteKey never changes during the lifetime of the page.
-    A temporary note starts with a UUID. After POST returns an ID, only session.id
-    changes; the noteKey stays the same.
-  */
   const noteSessionsRef = useRef(new Map());
-
-  // Prevents an older GET response from replacing a newer sidebar refresh.
   const notesRefreshVersionRef = useRef(0);
-
-  // ---------------------------------------------------------------------------
-  // Small helpers
-  // ---------------------------------------------------------------------------
 
   function getTitleFromContent(content) {
     return content.split(/\r?\n/)[0].trim();
@@ -79,8 +45,6 @@ export default function NotesPageClient({ user }) {
     const existingSession = noteSessionsRef.current.get(noteKey);
 
     if (existingSession) {
-      // If this note just received its database ID, keep the same local key and
-      // simply attach the database ID to its existing session.
       if (existingSession.id == null && note.id != null) {
         existingSession.id = note.id;
       }
@@ -119,10 +83,6 @@ export default function NotesPageClient({ user }) {
     }
   }
 
-  // ---------------------------------------------------------------------------
-  // Sidebar/server refresh
-  // ---------------------------------------------------------------------------
-
   async function refreshNotesList() {
     const refreshVersion = ++notesRefreshVersionRef.current;
 
@@ -135,22 +95,12 @@ export default function NotesPageClient({ user }) {
 
     const serverNotes = await req.json();
 
-    // If a newer refresh started while this request was travelling, ignore this
-    // older response.
     if (refreshVersion !== notesRefreshVersionRef.current) {
       return;
     }
 
     setNotes((currentNotes) => {
       const refreshedServerNotes = serverNotes.map((serverNote) => {
-        /*
-          Try to match this database note with an existing local note.
-
-          This is especially important after creating a new note:
-          - locally it may have key "550e8400-..."
-          - in the database it may now have id 123
-          - we DO NOT want to replace its local key with "db-123" mid-session.
-        */
         const existingLocalNote = currentNotes.find((localNote) => {
           const localKey = getNoteKey(localNote);
           const localSession = getSession(localKey);
@@ -166,7 +116,6 @@ export default function NotesPageClient({ user }) {
         let session = getSession(noteKey);
 
         if (!session) {
-          // This is a normal note loaded from the database for the first time.
           session = {
             id: serverNote.id,
             latestContent: serverNote.content ?? "",
@@ -180,13 +129,6 @@ export default function NotesPageClient({ user }) {
           session.id = serverNote.id;
         }
 
-        /*
-          If the note already exists locally, local text wins.
-
-          A GET may have started before the latest PATCH finished, so even when
-          latestContent === savedContent we do not let an older GET roll the UI
-          backwards to stale server text.
-        */
         if (existingLocalNote) {
           const localContent = session.latestContent ?? existingLocalNote.content ?? "";
 
@@ -208,12 +150,6 @@ export default function NotesPageClient({ user }) {
 
       const serverIds = new Set(serverNotes.map((note) => note.id));
 
-      /*
-        Keep notes that only exist locally.
-
-        This protects the exact scenario where the app opens, GET /notes starts,
-        and the user immediately begins a new note before that GET returns.
-      */
       const localOnlyNotes = currentNotes.filter((localNote) => {
         const noteKey = getNoteKey(localNote);
         const session = getSession(noteKey);
@@ -234,10 +170,6 @@ export default function NotesPageClient({ user }) {
       return [...localOnlyNotes, ...refreshedServerNotes];
     });
   }
-
-  // ---------------------------------------------------------------------------
-  // Local note editing
-  // ---------------------------------------------------------------------------
 
   function createTemporaryNote(content) {
     const clientId = crypto.randomUUID();
@@ -291,19 +223,9 @@ export default function NotesPageClient({ user }) {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // Saving
-  // ---------------------------------------------------------------------------
-
   async function runSaveLoop(noteKey, session) {
     try {
       while (!session.deleted) {
-        /*
-          Snapshot the exact version we are about to send.
-
-          If the user types more while the request is happening,
-          session.latestContent will change, but contentToSave won't.
-        */
         const contentToSave = session.latestContent ?? "";
 
         const databaseId = session.id;
@@ -325,12 +247,6 @@ export default function NotesPageClient({ user }) {
         const title = getTitleFromContent(contentToSave);
 
         if (databaseId == null) {
-          /*
-            FIRST SAVE.
-
-            The note exists locally but does not have a database ID yet,
-            so we create it with POST.
-          */
           const req = await fetch("/api/notes/", {
             method: "POST",
             headers: {
@@ -348,21 +264,6 @@ export default function NotesPageClient({ user }) {
 
           const response = await req.json();
 
-          /*
-            Supports:
-
-            {
-              id: 123
-            }
-
-            or:
-
-            {
-              note: {
-                id: 123
-              }
-            }
-          */
           const createdNote = response.note ?? response;
 
           if (createdNote.id == null) {
@@ -371,28 +272,10 @@ export default function NotesPageClient({ user }) {
 
           const createdId = createdNote.id;
 
-          /*
-            Critical transition:
-
-            The local note keeps the SAME noteKey, but from this moment onward
-            session.id exists.
-
-            Every future save therefore uses PATCH instead of POST.
-          */
           session.id = createdId;
 
-          /*
-            Only this exact snapshot was confirmed by the server.
-
-            If the user typed while POST was happening,
-            latestContent may already contain something newer.
-          */
           session.savedContent = contentToSave;
 
-          /*
-            If the user deleted the note while POST was in flight,
-            remove the just-created row immediately instead of resurrecting it.
-          */
           if (session.deleted) {
             await fetch("/api/notes", {
               method: "DELETE",
@@ -407,11 +290,6 @@ export default function NotesPageClient({ user }) {
             return;
           }
 
-          /*
-            Attach the database ID to the existing local note
-            WITHOUT changing its clientId/local identity
-            and WITHOUT replacing newer editor text.
-          */
           setNotes((currentNotes) =>
             currentNotes.map((note) =>
               getNoteKey(note) === noteKey
@@ -424,11 +302,6 @@ export default function NotesPageClient({ user }) {
             ),
           );
         } else {
-          /*
-            The note already has a database ID.
-
-            Every save after the first POST is therefore PATCH.
-          */
           const req = await fetch("/api/notes", {
             method: "PATCH",
             headers: {
@@ -445,43 +318,15 @@ export default function NotesPageClient({ user }) {
             throw new Error("Erro ao atualizar nota");
           }
 
-          /*
-            Only mark the exact snapshot sent by this PATCH as saved.
-          */
           session.savedContent = contentToSave;
         }
 
-        /*
-          The user may have typed while POST/PATCH was travelling.
-
-          Example:
-
-          request saves:
-          "Hello"
-
-          while request is happening, user types:
-          "Hello world"
-
-          When the request returns:
-
-          savedContent = "Hello"
-          latestContent = "Hello world"
-
-          They are different, so we loop again and save the newer version.
-        */
         if (session.latestContent !== session.savedContent) {
           continue;
         }
 
         setStatusForNote(noteKey, "saved");
 
-        /*
-          Update ordering/sidebar data.
-
-          refreshNotesList() is intentionally NOT awaited.
-
-          Saving is finished already, so we let this save promise end.
-        */
         void refreshNotesList();
 
         return;
@@ -504,30 +349,12 @@ export default function NotesPageClient({ user }) {
       return Promise.resolve();
     }
 
-    /*
-      Only ONE save loop per note at a time.
-
-      If a request is already running, we do not start another parallel one.
-
-      The existing runSaveLoop will notice latestContent changed
-      and save the newer version itself.
-    */
     if (session.savePromise) {
       return session.savePromise;
     }
 
     const savePromise = runSaveLoop(noteKey, session);
 
-    /*
-      IMPORTANT BUG FIX:
-
-      Register the promise BEFORE scheduling its cleanup.
-
-      Promise.finally() always happens after this synchronous assignment,
-      even if runSaveLoop() returns immediately.
-
-      So a completed Promise cannot get stuck forever in savePromise.
-    */
     session.savePromise = savePromise;
 
     void savePromise.finally(() => {
@@ -535,10 +362,6 @@ export default function NotesPageClient({ user }) {
         session.savePromise = null;
       }
 
-      /*
-        A temporary note may have been deleted while its POST was in flight.
-        When everything finishes we can finally remove its session.
-      */
       if (session.deleted) {
         noteSessionsRef.current.delete(noteKey);
       }
@@ -548,9 +371,6 @@ export default function NotesPageClient({ user }) {
   }
 
   function scheduleAutosave(noteKey) {
-    /*
-      Every new keystroke cancels the old timer.
-    */
     clearAutosaveTimer();
 
     const session = getSession(noteKey);
@@ -571,18 +391,11 @@ export default function NotesPageClient({ user }) {
 
     setStatusForNote(noteKey, "unsaved");
 
-    /*
-      Wait 700ms after the last keystroke.
-
-      If another keystroke happens before this,
-      scheduleAutosave() will cancel this timer
-      and create another one.
-    */
     autosaveTimeoutRef.current = setTimeout(() => {
       autosaveTimeoutRef.current = null;
 
       void persistNote(noteKey);
-    }, 700);
+    }, 600);
   }
 
   function saveCurrentNoteImmediately() {
@@ -600,9 +413,6 @@ export default function NotesPageClient({ user }) {
       return Promise.resolve();
     }
 
-    /*
-      Don't create a totally blank temporary note.
-    */
     if (session.id == null && !(session.latestContent ?? "").trim()) {
       return Promise.resolve();
     }
@@ -627,10 +437,6 @@ export default function NotesPageClient({ user }) {
 
     const content = session.latestContent ?? "";
 
-    /*
-      If a brand-new note was completely erased before ever reaching the DB,
-      discard it instead of creating an empty row.
-    */
     if (session.id == null && !content.trim()) {
       session.deleted = true;
 
@@ -643,24 +449,12 @@ export default function NotesPageClient({ user }) {
       return;
     }
 
-    /*
-      Navigation stays instant.
-
-      We don't make the user wait for the request before opening another note.
-    */
     void persistNote(noteKey);
   }
-
-  // ---------------------------------------------------------------------------
-  // Editor/navigation handlers
-  // ---------------------------------------------------------------------------
 
   function handleEditorChange(e) {
     const content = e.target.value;
 
-    /*
-      The textarea itself updates immediately.
-    */
     setEditorContent(content);
 
     let noteKey = activeNoteKeyRef.current;
