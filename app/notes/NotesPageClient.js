@@ -847,7 +847,7 @@ export default function NotesPageClient({ user }) {
         <div
           className="topBar"
           style={{
-            justifyContent: sideBarToggle ? "flex-end" : "space-between",
+            justifyContent: "space-between",
           }}
         >
           {!sideBarToggle && (
@@ -861,7 +861,17 @@ export default function NotesPageClient({ user }) {
               }}
             />
           )}
+          {selectedNote && (
+            <small className="saveStatus">
+              {saveStatus === "saving" && "Saving..."}
 
+              {saveStatus === "saved" && "Saved"}
+
+              {saveStatus === "unsaved" && "Unsaved changes"}
+
+              {saveStatus === "error" && "Couldn't save"}
+            </small>
+          )}
           <ThemeToggle />
         </div>
 
@@ -874,18 +884,6 @@ export default function NotesPageClient({ user }) {
               value={editorContent}
               placeholder={selectedNote ? "" : "What's on your mind?"}
             />
-
-            {selectedNote && (
-              <small className="saveStatus">
-                {saveStatus === "saving" && "Saving..."}
-
-                {saveStatus === "saved" && "Saved"}
-
-                {saveStatus === "unsaved" && "Unsaved changes"}
-
-                {saveStatus === "error" && "Couldn't save"}
-              </small>
-            )}
           </div>
         </div>
       </div>
