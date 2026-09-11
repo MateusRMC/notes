@@ -746,6 +746,7 @@ export default function NotesPageClient({ user }) {
           {sideBarToggle && (
             <img
               className="sidebarClose"
+              style={{ cursor: "pointer" }}
               src="/sidebar-close.svg"
               alt="Close sidebar"
               onClick={() => setSidebarToggle(false)}
@@ -854,12 +855,16 @@ export default function NotesPageClient({ user }) {
             <img
               className="sidebarOpen"
               src="/sidebar-open.svg"
+              style={{ cursor: "pointer" }}
               alt="Open sidebar"
               onClick={() => {
                 setSidebarToggle(true);
                 setOptionsMenu(null);
               }}
             />
+          )}
+          {selectedNote === null && sideBarToggle === true && (
+            <small style={{ color: "transparent" }}>.</small>
           )}
           {selectedNote && (
             <small className="saveStatus">
