@@ -266,7 +266,7 @@ textarea {
   flex-direction: column;
   margin: 0 auto;
   width: 100%;
-  max-width: 1000px;
+  max-width: 900px;
   flex: 1;
   border-radius: 10px;
 }
@@ -294,18 +294,17 @@ textarea {
 }
 
 .newContent {
-  font-family: Arial, Helvetica, sans-serif;
-
+  font-family: Helvetica, sans-serif;
+  line-height: 2;
+  letter-spacing: 0.4;
   flex: 1;
   min-height: 0;
-
   margin: 4px 0px;
   padding: 20px;
-
   border-radius: 5px;
   border: none;
   outline: none;
-  font-size: 18px;
+  font-size: 16px;
 
   resize: none;
   overflow-y: auto;
